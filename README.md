@@ -1,6 +1,6 @@
 # BizzBot AI
 
-BizzBot AI is a Retrieval-Augmented Generation lead generation SaaS platform. The current build includes the runnable project foundation, JWT authentication, PDF uploads, document indexing, RAG chat, and Phase 6 AI lead extraction.
+BizzBot AI is a Retrieval-Augmented Generation lead generation SaaS platform. The current build includes the runnable project foundation, JWT authentication, PDF uploads, document indexing, RAG chat, AI lead extraction, and Phase 7 analytics.
 
 ## Phase 1 Runbook
 
@@ -29,7 +29,7 @@ BizzBot AI is a Retrieval-Augmented Generation lead generation SaaS platform. Th
 
 ## Current Phase
 
-Phase 6 adds hybrid regex plus LLM-assisted lead extraction, lead scoring, CSV export, and a full lead dashboard. Analytics and final UI polish are implemented in later phases without changing the core project layout.
+Phase 7 adds analytics APIs, activity tracking, usage metrics, dashboard charts, and user-scoped reporting without changing the core project layout.
 
 ## Authentication API
 
@@ -61,3 +61,9 @@ Phase 6 adds hybrid regex plus LLM-assisted lead extraction, lead scoring, CSV e
 - `GET /api/leads/:leadId`
 - `DELETE /api/leads/:leadId`
 - `GET /api/leads/export/csv`
+
+## Analytics API
+
+- `GET /api/analytics/overview`
+- `GET /api/analytics/activity`
+- `GET /api/analytics/usage`

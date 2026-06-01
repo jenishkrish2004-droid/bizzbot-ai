@@ -7,6 +7,7 @@ from ai_pipeline.rag_pipeline import retrieve_document_context
 from extensions import db
 from models.conversation import Conversation, ConversationMessage
 from models.document import Document
+from services.analytics_service import record_activity_event, record_usage_metric
 
 
 class ChatServiceError(ValueError):
@@ -34,6 +35,14 @@ def create_conversation(user_id: str, document_id: str, title: str | None = None
     )
     db.session.add(conversation)
     db.session.commit()
+    record_activity_event(
+        user_id=user_id,
+        event_type="conversation.created",
+        entity_type="conversation",
+        entity_id=conversation.id,
+        metadata={"documentId": document.id, "title": conversation.title},
+    )
+    record_usage_metric(user_id=user_id, metric_name="conversations_created")
     return conversation
 
 
@@ -88,6 +97,18 @@ def ask_document_question(
     db.session.add(user_message)
     db.session.add(assistant_message)
     db.session.commit()
+    record_activity_event(
+        user_id=user_id,
+        event_type="chat.question_asked",
+        entity_type="conversation",
+        entity_id=conversation.id,
+        metadata={
+            "documentId": document.id,
+            "questionLength": len(cleaned_question),
+            "citationCount": len(citations),
+        },
+    )
+    record_usage_metric(user_id=user_id, metric_name="chat_questions_asked")
 
     return conversation, assistant_message
 

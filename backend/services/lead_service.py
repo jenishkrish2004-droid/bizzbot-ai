@@ -13,6 +13,7 @@ from extensions import db
 from models.conversation import Conversation
 from models.document import Document
 from models.lead import Lead
+from services.analytics_service import record_activity_event, record_usage_metric
 
 
 class LeadServiceError(ValueError):
@@ -50,6 +51,23 @@ def extract_leads_for_document(
 
     saved = _persist_extracted_leads(user_id=user_id, document_id=document_id, extracted=extracted)
     db.session.commit()
+    record_activity_event(
+        user_id=user_id,
+        event_type="lead.extraction_completed",
+        entity_type="document",
+        entity_id=document_id,
+        metadata={
+            "documentName": document.original_filename,
+            "leadCount": len(saved),
+            "replaceExisting": replace_existing,
+        },
+    )
+    record_usage_metric(
+        user_id=user_id,
+        metric_name="leads_extracted",
+        metric_value=float(len(saved)),
+        metadata={"documentId": document_id},
+    )
     return saved
 
 
@@ -106,8 +124,22 @@ def delete_lead(user_id: str, lead_id: str) -> bool:
     lead = get_lead(user_id, lead_id)
     if not lead:
         return False
+    metadata = {
+        "name": lead.name,
+        "email": lead.email,
+        "company": lead.company,
+        "documentId": lead.document_id,
+    }
     db.session.delete(lead)
     db.session.commit()
+    record_activity_event(
+        user_id=user_id,
+        event_type="lead.deleted",
+        entity_type="lead",
+        entity_id=lead_id,
+        metadata=metadata,
+    )
+    record_usage_metric(user_id=user_id, metric_name="leads_deleted")
     return True
 
 

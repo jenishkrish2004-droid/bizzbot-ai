@@ -7,6 +7,7 @@ from sqlalchemy.exc import IntegrityError
 
 from extensions import db
 from models.user import User
+from services.analytics_service import record_activity_event, record_usage_metric
 from utils.security import hash_password, verify_password
 from utils.validators import ValidationError, normalize_email, validate_password_strength
 
@@ -35,6 +36,15 @@ def register_user(full_name: str, email: str, password: str) -> dict:
         db.session.rollback()
         raise ValidationError("An account with this email already exists") from exc
 
+    record_activity_event(
+        user_id=user.id,
+        event_type="user.signup",
+        entity_type="user",
+        entity_id=user.id,
+        metadata={"email": user.email},
+    )
+    record_usage_metric(user_id=user.id, metric_name="user_signups")
+
     return build_auth_payload(user)
 
 
@@ -49,6 +59,15 @@ def authenticate_user(email: str, password: str) -> dict:
 
     user.last_login_at = datetime.now(timezone.utc)
     db.session.commit()
+
+    record_activity_event(
+        user_id=user.id,
+        event_type="user.login",
+        entity_type="user",
+        entity_id=user.id,
+        metadata={"email": user.email},
+    )
+    record_usage_metric(user_id=user.id, metric_name="user_logins")
 
     return build_auth_payload(user)
 

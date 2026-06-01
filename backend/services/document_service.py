@@ -9,6 +9,7 @@ from extensions import db
 from ai_pipeline.rag_pipeline import index_pdf_document
 from ai_pipeline.vector_store import delete_vector_index
 from models.document import Document
+from services.analytics_service import record_activity_event, record_usage_metric
 from utils.file_utils import (
     FileValidationError,
     build_stored_pdf_name,
@@ -67,6 +68,22 @@ def upload_documents(user_id: str, files: list[FileStorage]) -> list[Document]:
             created_documents.append(document)
 
         db.session.commit()
+        record_usage_metric(
+            user_id=user_id,
+            metric_name="documents_uploaded",
+            metric_value=float(len(created_documents)),
+        )
+        for document in created_documents:
+            record_activity_event(
+                user_id=user_id,
+                event_type="document.uploaded",
+                entity_type="document",
+                entity_id=document.id,
+                metadata={
+                    "filename": document.original_filename,
+                    "fileSizeBytes": document.file_size_bytes,
+                },
+            )
         return created_documents
     except FileValidationError:
         db.session.rollback()
@@ -86,12 +103,21 @@ def delete_document(user_id: str, document_id: str) -> bool:
     if not document:
         return False
 
+    original_filename = document.original_filename
     file_path = Path(current_app.config["UPLOAD_FOLDER"]) / user_id / document.stored_filename
     vector_index_path = document.vector_index_path
     db.session.delete(document)
     db.session.commit()
     delete_file_if_exists(file_path)
     delete_vector_index(vector_index_path)
+    record_activity_event(
+        user_id=user_id,
+        event_type="document.deleted",
+        entity_type="document",
+        entity_id=document_id,
+        metadata={"filename": original_filename},
+    )
+    record_usage_metric(user_id=user_id, metric_name="documents_deleted")
     return True
 
 
@@ -111,6 +137,13 @@ def process_document_for_user(user_id: str, document_id: str) -> Document:
     document.status = "processing"
     document.error_message = None
     db.session.commit()
+    record_activity_event(
+        user_id=user_id,
+        event_type="document.indexing_started",
+        entity_type="document",
+        entity_id=document.id,
+        metadata={"filename": document.original_filename},
+    )
 
     try:
         result = index_pdf_document(
@@ -131,6 +164,18 @@ def process_document_for_user(user_id: str, document_id: str) -> Document:
         document.vector_index_path = result.vector_index_path
         document.error_message = None
         db.session.commit()
+        record_activity_event(
+            user_id=user_id,
+            event_type="document.indexed",
+            entity_type="document",
+            entity_id=document.id,
+            metadata={
+                "filename": document.original_filename,
+                "chunkCount": document.chunk_count,
+                "textCharCount": document.text_char_count,
+            },
+        )
+        record_usage_metric(user_id=user_id, metric_name="documents_indexed")
 
         try:
             from services.lead_service import extract_leads_for_document
@@ -145,4 +190,12 @@ def process_document_for_user(user_id: str, document_id: str) -> Document:
         document.status = "failed"
         document.error_message = str(exc)
         db.session.commit()
+        record_activity_event(
+            user_id=user_id,
+            event_type="document.processing_failed",
+            entity_type="document",
+            entity_id=document.id,
+            metadata={"filename": document.original_filename, "error": str(exc)},
+        )
+        record_usage_metric(user_id=user_id, metric_name="documents_failed")
         raise DocumentServiceError(str(exc)) from exc
