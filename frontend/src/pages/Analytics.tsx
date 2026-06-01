@@ -74,7 +74,7 @@ function ChartTooltip({ active, payload, label }: TooltipContentProps) {
   if (!active || !payload?.length) return null;
 
   return (
-    <div className="rounded-lg border border-border bg-card px-3 py-2 text-xs shadow-panel">
+    <div className="glass-panel rounded-lg px-3 py-2 text-xs">
       {label ? <p className="mb-1 font-semibold text-foreground">{label}</p> : null}
       <div className="space-y-1">
         {payload.map((item) => (
@@ -91,7 +91,7 @@ function ChartTooltip({ active, payload, label }: TooltipContentProps) {
 
 function EmptyChart() {
   return (
-    <div className="flex h-full min-h-64 items-center justify-center rounded-lg border border-dashed border-border text-sm text-muted-foreground">
+    <div className="flex h-full min-h-64 items-center justify-center rounded-lg border border-dashed border-border/80 bg-background/35 text-sm text-muted-foreground">
       No activity recorded for this range.
     </div>
   );
@@ -100,7 +100,7 @@ function EmptyChart() {
 function ActivityList({ events }: { events: ActivityEvent[] }) {
   if (!events.length) {
     return (
-      <div className="rounded-lg border border-dashed border-border px-4 py-10 text-center text-sm text-muted-foreground">
+      <div className="rounded-lg border border-dashed border-border/80 bg-background/35 px-4 py-10 text-center text-sm text-muted-foreground">
         Activity events will appear here as the workspace is used.
       </div>
     );
@@ -141,7 +141,7 @@ function StatCard({
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.04 }}
-      className="rounded-lg border border-border bg-card p-5 shadow-panel"
+      className="glass-panel interactive-card rounded-lg p-5"
     >
       <div className="flex items-center justify-between gap-3">
         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted text-primary">
@@ -243,7 +243,7 @@ export function Analytics() {
 
   if (!overview) {
     return (
-      <section className="rounded-lg border border-border bg-card p-6 shadow-panel">
+      <section className="glass-panel-strong rounded-lg p-6">
         <h2 className="text-xl font-semibold tracking-normal">Analytics</h2>
         <p className="mt-2 text-sm text-red-700">{error ?? "Could not load analytics"}</p>
       </section>
@@ -259,7 +259,7 @@ export function Analytics() {
 
   return (
     <div className="space-y-6">
-      <section className="rounded-lg border border-border bg-card p-6 shadow-panel">
+      <section className="glass-panel-strong rounded-lg p-6">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <p className="text-sm font-medium text-muted-foreground">Workspace Analytics</p>
@@ -268,7 +268,7 @@ export function Analytics() {
               {overview.range.startDate} to {overview.range.endDate}
             </p>
           </div>
-          <div className="flex rounded-lg border border-border bg-background p-1">
+          <div className="flex rounded-lg border border-border/80 bg-background/60 p-1">
             {rangeOptions.map((option) => (
               <button
                 key={option}
@@ -286,7 +286,7 @@ export function Analytics() {
         </div>
       </section>
 
-      {error ? <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p> : null}
+      {error ? <p className="error-alert rounded-md px-3 py-2 text-sm">{error}</p> : null}
 
       <section className="grid gap-4 md:grid-cols-3 xl:grid-cols-6">
         {statCards.map((card, index) => (
@@ -295,7 +295,7 @@ export function Analytics() {
       </section>
 
       <section className="grid gap-6 xl:grid-cols-2">
-        <article className="rounded-lg border border-border bg-card p-5 shadow-panel">
+        <article className="glass-panel-strong rounded-lg p-5">
           <div className="mb-5 flex items-center justify-between">
             <div>
               <h3 className="text-sm font-semibold">Lead generation trends</h3>
@@ -307,7 +307,7 @@ export function Analytics() {
             {leadTrendHasData ? (
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={overview.charts.leadGenerationTrend}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                   <XAxis dataKey="label" tickLine={false} axisLine={false} tick={{ fontSize: 12 }} />
                   <YAxis tickLine={false} axisLine={false} tick={{ fontSize: 12 }} allowDecimals={false} />
                   <Tooltip content={<ChartTooltip />} />
@@ -320,7 +320,7 @@ export function Analytics() {
           </div>
         </article>
 
-        <article className="rounded-lg border border-border bg-card p-5 shadow-panel">
+        <article className="glass-panel-strong rounded-lg p-5">
           <div className="mb-5">
             <h3 className="text-sm font-semibold">Documents processed</h3>
             <p className="mt-1 text-xs text-muted-foreground">Indexed or failed documents by day</p>
@@ -329,7 +329,7 @@ export function Analytics() {
             {documentTrendHasData ? (
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={overview.charts.documentsProcessed}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                   <XAxis dataKey="label" tickLine={false} axisLine={false} tick={{ fontSize: 12 }} />
                   <YAxis tickLine={false} axisLine={false} tick={{ fontSize: 12 }} allowDecimals={false} />
                   <Tooltip content={<ChartTooltip />} />
@@ -342,7 +342,7 @@ export function Analytics() {
           </div>
         </article>
 
-        <article className="rounded-lg border border-border bg-card p-5 shadow-panel">
+        <article className="glass-panel-strong rounded-lg p-5">
           <div className="mb-5">
             <h3 className="text-sm font-semibold">Chat activity</h3>
             <p className="mt-1 text-xs text-muted-foreground">User questions asked by day</p>
@@ -351,7 +351,7 @@ export function Analytics() {
             {chatTrendHasData ? (
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={overview.charts.chatActivity}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                   <XAxis dataKey="label" tickLine={false} axisLine={false} tick={{ fontSize: 12 }} />
                   <YAxis tickLine={false} axisLine={false} tick={{ fontSize: 12 }} allowDecimals={false} />
                   <Tooltip content={<ChartTooltip />} />
@@ -364,7 +364,7 @@ export function Analytics() {
           </div>
         </article>
 
-        <article className="rounded-lg border border-border bg-card p-5 shadow-panel">
+        <article className="glass-panel-strong rounded-lg p-5">
           <div className="mb-5">
             <h3 className="text-sm font-semibold">User engagement</h3>
             <p className="mt-1 text-xs text-muted-foreground">Tracked workspace actions by day</p>
@@ -373,7 +373,7 @@ export function Analytics() {
             {engagementHasData ? (
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={overview.charts.userEngagement}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                   <XAxis dataKey="label" tickLine={false} axisLine={false} tick={{ fontSize: 12 }} />
                   <YAxis tickLine={false} axisLine={false} tick={{ fontSize: 12 }} allowDecimals={false} />
                   <Tooltip content={<ChartTooltip />} />
@@ -388,7 +388,7 @@ export function Analytics() {
       </section>
 
       <section className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_420px]">
-        <article className="rounded-lg border border-border bg-card p-5 shadow-panel">
+        <article className="glass-panel-strong rounded-lg p-5">
           <div className="mb-5">
             <h3 className="text-sm font-semibold">Lead source distribution</h3>
             <p className="mt-1 text-xs text-muted-foreground">Lead volume by indexed PDF</p>
@@ -397,7 +397,7 @@ export function Analytics() {
             {sourceHasData ? (
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={overview.charts.leadSourceDistribution} layout="vertical" margin={{ left: 12 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                   <XAxis type="number" tickLine={false} axisLine={false} tick={{ fontSize: 12 }} allowDecimals={false} />
                   <YAxis type="category" dataKey="name" width={150} tickLine={false} axisLine={false} tick={{ fontSize: 12 }} />
                   <Tooltip content={<ChartTooltip />} />
@@ -410,7 +410,7 @@ export function Analytics() {
           </div>
         </article>
 
-        <article className="rounded-lg border border-border bg-card p-5 shadow-panel">
+        <article className="glass-panel-strong rounded-lg p-5">
           <div className="mb-5">
             <h3 className="text-sm font-semibold">Document status</h3>
             <p className="mt-1 text-xs text-muted-foreground">Current library state</p>
@@ -442,7 +442,7 @@ export function Analytics() {
       </section>
 
       <section className="grid gap-6 xl:grid-cols-[360px_minmax(0,1fr)]">
-        <article className="rounded-lg border border-border bg-card p-5 shadow-panel">
+        <article className="glass-panel-strong rounded-lg p-5">
           <h3 className="text-sm font-semibold">Processing quality</h3>
           <div className="mt-5 space-y-4">
             <div>
@@ -455,11 +455,11 @@ export function Analytics() {
               </div>
             </div>
             <div className="grid grid-cols-2 gap-3 text-sm">
-              <div className="rounded-lg border border-border p-3">
+              <div className="glass-panel rounded-lg p-3">
                 <p className="text-muted-foreground">Processed</p>
                 <p className="mt-1 text-lg font-semibold">{formatNumber(overview.documents.processedDocuments)}</p>
               </div>
-              <div className="rounded-lg border border-border p-3">
+              <div className="glass-panel rounded-lg p-3">
                 <p className="text-muted-foreground">Failed</p>
                 <p className="mt-1 text-lg font-semibold">{formatNumber(overview.documents.failedDocuments)}</p>
               </div>
@@ -467,7 +467,7 @@ export function Analytics() {
           </div>
         </article>
 
-        <article className="rounded-lg border border-border bg-card p-5 shadow-panel">
+        <article className="glass-panel-strong rounded-lg p-5">
           <div className="mb-2 flex items-center justify-between">
             <div>
               <h3 className="text-sm font-semibold">Recent activity</h3>

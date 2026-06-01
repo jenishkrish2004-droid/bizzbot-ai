@@ -191,12 +191,12 @@ export function LeadsPage() {
   return (
     <div className="space-y-6">
       {toast ? (
-        <div className="fixed right-4 top-4 z-50 rounded-lg border border-border bg-card/95 px-4 py-3 text-sm font-medium shadow-panel backdrop-blur">
+        <div className="glass-panel-strong fixed right-4 top-4 z-50 rounded-lg px-4 py-3 text-sm font-medium">
           {toast}
         </div>
       ) : null}
 
-      <section className="rounded-lg border border-white/50 bg-card/85 p-6 shadow-panel backdrop-blur">
+      <section className="glass-panel-strong rounded-lg p-6">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div>
             <p className="text-sm font-medium text-muted-foreground">Lead Engine</p>
@@ -204,7 +204,7 @@ export function LeadsPage() {
           </div>
           <div className="flex flex-col gap-3 sm:flex-row">
             <select
-              className="h-10 min-w-64 rounded-md border border-border bg-background px-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+              className="field-control min-w-64"
               value={selectedDocumentId}
               onChange={(event) => setSelectedDocumentId(event.target.value)}
               disabled={!indexedDocuments.length}
@@ -238,7 +238,7 @@ export function LeadsPage() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.04 }}
-            className="rounded-lg border border-white/50 bg-card/85 p-5 shadow-panel backdrop-blur"
+            className="glass-panel interactive-card rounded-lg p-5"
           >
             <card.icon size={20} className="text-primary" />
             <p className="mt-4 text-sm text-muted-foreground">{card.label}</p>
@@ -247,13 +247,13 @@ export function LeadsPage() {
         ))}
       </section>
 
-      <section className="rounded-lg border border-border bg-card shadow-panel">
+      <section className="glass-panel-strong rounded-lg">
         <div className="flex flex-col gap-3 border-b border-border p-4 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex min-w-0 flex-1 gap-2">
             <div className="relative min-w-0 flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={17} />
               <input
-                className="h-10 w-full rounded-md border border-border bg-background pl-9 pr-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+                className="field-control h-10 pl-9 pr-3"
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
                 onKeyDown={(event) => {
@@ -267,7 +267,7 @@ export function LeadsPage() {
             </Button>
           </div>
           <select
-            className="h-10 rounded-md border border-border bg-background px-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+            className="field-control h-10"
             value={company}
             onChange={(event) => {
               setCompany(event.target.value);
@@ -283,7 +283,7 @@ export function LeadsPage() {
           </select>
         </div>
 
-        {error ? <p className="mx-4 mt-4 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p> : null}
+        {error ? <p className="error-alert mx-4 mt-4 rounded-md px-3 py-2 text-sm">{error}</p> : null}
 
         <div className="overflow-x-auto">
           <div className="min-w-[980px]">
@@ -311,7 +311,7 @@ export function LeadsPage() {
                     <div className="flex flex-wrap gap-1">
                       {lead.intent.length ? (
                         lead.intent.slice(0, 3).map((intent) => (
-                          <span key={intent} className="rounded-md bg-muted px-2 py-1 text-xs font-medium">
+                          <span key={intent} className="status-pill">
                             {intent}
                           </span>
                         ))

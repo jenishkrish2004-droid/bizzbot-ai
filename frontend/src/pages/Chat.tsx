@@ -106,7 +106,7 @@ export function Chat() {
 
   return (
     <div className="grid min-h-[calc(100vh-9rem)] gap-6 xl:grid-cols-[320px_minmax(0,1fr)]">
-      <aside className="rounded-lg border border-border bg-card p-5 shadow-panel">
+      <aside className="glass-panel-strong rounded-lg p-5">
         <div>
           <p className="text-sm font-medium text-muted-foreground">RAG Workspace</p>
           <h2 className="mt-1 text-xl font-semibold tracking-normal">Document Chat</h2>
@@ -115,7 +115,7 @@ export function Chat() {
         <label className="mt-5 block text-sm font-medium">
           Indexed document
           <select
-            className="mt-2 h-11 w-full rounded-md border border-border bg-background px-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+            className="field-control mt-2"
             value={activeDocumentId}
             onChange={(event) => {
               setActiveDocumentId(event.target.value);
@@ -136,13 +136,13 @@ export function Chat() {
         </label>
 
         {activeDocument ? (
-          <div className="mt-4 rounded-lg border border-border bg-background p-3">
+          <div className="glass-panel mt-4 rounded-lg p-3">
             <div className="flex items-start gap-3">
               <FileText size={18} className="mt-0.5 shrink-0 text-primary" aria-hidden="true" />
               <div className="min-w-0">
                 <p className="truncate text-sm font-semibold">{activeDocument.originalFilename}</p>
                 <p className="mt-1 text-xs text-muted-foreground">
-                  {activeDocument.chunkCount} chunks · {activeDocument.textCharCount.toLocaleString()} chars
+                  {activeDocument.chunkCount} chunks / {activeDocument.textCharCount.toLocaleString()} chars
                 </p>
               </div>
             </div>
@@ -159,8 +159,8 @@ export function Chat() {
                   type="button"
                   onClick={() => loadConversation(conversation.id)}
                   className={cn(
-                    "flex w-full items-center gap-3 rounded-md border border-border px-3 py-2 text-left text-sm transition hover:bg-muted",
-                    activeConversation?.id === conversation.id && "bg-muted",
+                    "flex w-full items-center gap-3 rounded-md border border-border/80 bg-background/35 px-3 py-2 text-left text-sm transition hover:bg-muted/80",
+                    activeConversation?.id === conversation.id && "bg-muted text-foreground shadow-soft",
                   )}
                 >
                   <MessageSquareText size={16} className="shrink-0 text-primary" aria-hidden="true" />
@@ -176,7 +176,7 @@ export function Chat() {
         </div>
       </aside>
 
-      <section className="flex min-h-[620px] flex-col rounded-lg border border-border bg-card shadow-panel">
+      <section className="glass-panel-strong flex min-h-[620px] flex-col rounded-lg">
         <div className="flex items-center justify-between border-b border-border px-5 py-4">
           <div>
             <p className="text-sm font-medium text-muted-foreground">
@@ -196,7 +196,7 @@ export function Chat() {
                   "max-w-3xl rounded-lg px-4 py-3",
                   message.role === "user"
                     ? "ml-auto bg-primary text-primary-foreground"
-                    : "border border-border bg-background",
+                    : "border border-border/80 bg-background/70",
                 )}
               >
                 <div className="flex items-start gap-3">
@@ -211,7 +211,7 @@ export function Chat() {
                           <div key={`${message.id}-${citation.source}`} className="rounded-md bg-muted px-3 py-2">
                             <p className="text-xs font-semibold text-foreground">
                               Source {citation.source}
-                              {citation.page ? ` · Page ${citation.page}` : ""}
+                              {citation.page ? ` / Page ${citation.page}` : ""}
                             </p>
                             <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{citation.preview}</p>
                           </div>
@@ -237,12 +237,12 @@ export function Chat() {
           )}
         </div>
 
-        {error ? <p className="mx-5 mb-3 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p> : null}
+        {error ? <p className="error-alert mx-5 mb-3 rounded-md px-3 py-2 text-sm">{error}</p> : null}
 
         <form className="border-t border-border p-4" onSubmit={handleSubmit}>
           <div className="flex gap-3">
             <input
-              className="h-11 min-w-0 flex-1 rounded-md border border-border bg-background px-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+              className="field-control min-w-0 flex-1"
               value={question}
               onChange={(event) => setQuestion(event.target.value)}
               placeholder="Ask about this document..."

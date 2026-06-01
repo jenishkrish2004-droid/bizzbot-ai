@@ -8,8 +8,8 @@ export function ProtectedRoute() {
 
   if (isLoading) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-background px-4 text-sm font-medium text-muted-foreground">
-        Loading workspace...
+      <main className="app-surface flex min-h-screen items-center justify-center px-4 text-sm font-medium text-muted-foreground">
+        <div className="glass-panel rounded-lg px-5 py-4">Loading workspace...</div>
       </main>
     );
   }

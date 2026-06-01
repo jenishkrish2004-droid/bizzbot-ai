@@ -1,8 +1,11 @@
 import { type FormEvent, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { AxiosError } from "axios";
+import { Bot, Loader2 } from "lucide-react";
+import { motion } from "framer-motion";
 
 import { Button } from "../components/ui/button";
+import { ThemeToggle } from "../components/ui/ThemeToggle";
 import { useAuth } from "../contexts/AuthContext";
 
 export function Signup() {
@@ -38,8 +41,25 @@ export function Signup() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-background px-4 py-10">
-      <section className="w-full max-w-md rounded-lg border border-border bg-card p-6 shadow-panel">
+    <main className="app-surface flex min-h-screen items-center justify-center px-4 py-10">
+      <div className="absolute right-4 top-4">
+        <ThemeToggle />
+      </div>
+      <motion.section
+        initial={{ opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.24 }}
+        className="glass-panel-strong w-full max-w-md rounded-lg p-6"
+      >
+        <div className="mb-6 flex items-center gap-3">
+          <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-glow">
+            <Bot size={22} aria-hidden="true" />
+          </div>
+          <div>
+            <p className="text-sm font-semibold">BizzBot AI</p>
+            <p className="text-xs text-muted-foreground">RAG Lead Platform</p>
+          </div>
+        </div>
         <h1 className="text-2xl font-semibold tracking-normal">Create workspace</h1>
         <p className="mt-2 text-sm text-muted-foreground">Start with a secure account for document intelligence.</p>
 
@@ -47,7 +67,7 @@ export function Signup() {
           <label className="block text-sm font-medium">
             Full name
             <input
-              className="mt-2 h-11 w-full rounded-md border border-border bg-background px-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+              className="field-control mt-2"
               type="text"
               value={fullName}
               onChange={(event) => setFullName(event.target.value)}
@@ -58,7 +78,7 @@ export function Signup() {
           <label className="block text-sm font-medium">
             Email
             <input
-              className="mt-2 h-11 w-full rounded-md border border-border bg-background px-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+              className="field-control mt-2"
               type="email"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
@@ -69,7 +89,7 @@ export function Signup() {
           <label className="block text-sm font-medium">
             Password
             <input
-              className="mt-2 h-11 w-full rounded-md border border-border bg-background px-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+              className="field-control mt-2"
               type="password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
@@ -79,9 +99,10 @@ export function Signup() {
             />
           </label>
 
-          {error ? <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p> : null}
+          {error ? <p className="error-alert rounded-md px-3 py-2 text-sm">{error}</p> : null}
 
           <Button className="w-full" type="submit" disabled={isSubmitting}>
+            {isSubmitting ? <Loader2 className="mr-2 animate-spin" size={18} aria-hidden="true" /> : null}
             {isSubmitting ? "Creating account..." : "Create account"}
           </Button>
         </form>
@@ -92,7 +113,7 @@ export function Signup() {
             Sign in
           </Link>
         </p>
-      </section>
+      </motion.section>
     </main>
   );
 }

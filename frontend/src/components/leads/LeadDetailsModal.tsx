@@ -1,4 +1,5 @@
 import { Copy, ExternalLink, X } from "lucide-react";
+import { motion } from "framer-motion";
 
 import type { Lead } from "../../types/lead";
 
@@ -44,7 +45,12 @@ export function LeadDetailsModal({ lead, onClose, onToast }: LeadDetailsModalPro
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/45 px-4 py-6 backdrop-blur-sm">
-      <section className="max-h-[90vh] w-full max-w-3xl overflow-hidden rounded-lg border border-white/40 bg-card/95 shadow-panel backdrop-blur">
+      <motion.section
+        initial={{ opacity: 0, scale: 0.98, y: 10 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ duration: 0.18 }}
+        className="glass-panel-strong max-h-[90vh] w-full max-w-3xl overflow-hidden rounded-lg"
+      >
         <div className="flex items-start justify-between border-b border-border px-5 py-4">
           <div>
             <p className="text-sm font-medium text-muted-foreground">Lead Details</p>
@@ -62,13 +68,13 @@ export function LeadDetailsModal({ lead, onClose, onToast }: LeadDetailsModalPro
 
         <div className="max-h-[calc(90vh-5rem)] overflow-y-auto px-5 py-5">
           <div className="grid gap-4 md:grid-cols-2">
-            <div className="rounded-lg border border-border bg-background/70 p-4">
+            <div className="glass-panel rounded-lg p-4">
               <div className="flex items-start justify-between gap-3">
                 <Field label="Email" value={lead.email} />
                 <CopyButton value={lead.email} onToast={onToast} />
               </div>
             </div>
-            <div className="rounded-lg border border-border bg-background/70 p-4">
+            <div className="glass-panel rounded-lg p-4">
               <div className="flex items-start justify-between gap-3">
                 <Field label="Phone" value={lead.phone} />
                 <CopyButton value={lead.phone} onToast={onToast} />
@@ -81,7 +87,7 @@ export function LeadDetailsModal({ lead, onClose, onToast }: LeadDetailsModalPro
           </div>
 
           <div className="mt-5 grid gap-4 md:grid-cols-2">
-            <div className="rounded-lg border border-border bg-background/70 p-4">
+            <div className="glass-panel rounded-lg p-4">
               <div className="flex items-start justify-between gap-3">
                 <Field label="Website" value={lead.website} />
                 {lead.website ? (
@@ -97,7 +103,7 @@ export function LeadDetailsModal({ lead, onClose, onToast }: LeadDetailsModalPro
                 ) : null}
               </div>
             </div>
-            <div className="rounded-lg border border-border bg-background/70 p-4">
+            <div className="glass-panel rounded-lg p-4">
               <div className="flex items-start justify-between gap-3">
                 <Field label="LinkedIn" value={lead.linkedin} />
                 {lead.linkedin ? (
@@ -115,7 +121,7 @@ export function LeadDetailsModal({ lead, onClose, onToast }: LeadDetailsModalPro
             </div>
           </div>
 
-          <div className="mt-5 rounded-lg border border-border bg-background/70 p-4">
+          <div className="glass-panel mt-5 rounded-lg p-4">
             <dt className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Intent Keywords</dt>
             <dd className="mt-3 flex flex-wrap gap-2">
               {lead.intent.length ? (
@@ -130,7 +136,7 @@ export function LeadDetailsModal({ lead, onClose, onToast }: LeadDetailsModalPro
             </dd>
           </div>
 
-          <div className="mt-5 rounded-lg border border-border bg-background/70 p-4">
+          <div className="glass-panel mt-5 rounded-lg p-4">
             <div className="flex items-center justify-between gap-3">
               <dt className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Extracted Source Text</dt>
               <CopyButton value={lead.sourceText} onToast={onToast} />
@@ -140,7 +146,7 @@ export function LeadDetailsModal({ lead, onClose, onToast }: LeadDetailsModalPro
             </dd>
           </div>
         </div>
-      </section>
+      </motion.section>
     </div>
   );
 }
